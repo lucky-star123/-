@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>轮播图</title>
+	<style>
+      * {
+            margin: 0;
+            padding: 0;
+            text-decoration: none;
+        }
+        
+        body {
+            padding: 20px;
+        }
+        
+        #container {  /* 容器宽高600 400 */
+            position: relative;
+            width: 600px;
+            height: 400px;
+            border: 3px solid #333;
+            overflow: hidden; /* 只显示窗口的一张图片，把左右两边的都隐藏起来。 */
+        }
+        
+        #list {      /* 相对于容器定位，用来存放图片，图片是横向排列的*/
+            position: absolute;
+            z-index: 1;
+            width: 4200px; /* 因为共有7张图片 */
+            height: 400px;
+        }
+        
+        #list img {   /* 图片宽高和容器一致 */
+            float: left;
+            width: 600px;
+            height: 400px;
+        }
+        
+        #buttons {   /* 存放图片上的小圆点 */
+            position: absolute;
+            left: 250px;
+            bottom: 20px;
+            z-index: 2;  /* 位于图片之上 */
+            height: 10px;
+            width: 100px;
+        }
+        
+        #buttons span {  /* 图片上的小圆点 */
+            float: left;
+            margin-right: 5px;
+            width: 10px;
+            height: 10px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            background: #333;
+            cursor: pointer;
+        }
+        
+        #buttons .on {  /* 当点击图片上小圆点时出现背景颜色的变化 */
+            background: orangered;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 180px;
+            z-index: 2;
+            display: none;
+            width: 40px;
+            height: 40px;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 39px;
+            text-align: center;
+            color: #fff;
+            background-color: rgba(0, 0, 0, .3);
+            cursor: pointer;
+        }
+        
+        .arrow:hover {
+            background-color: rgba(0, 0, 0, .7);
+        }
+        
+        #container:hover .arrow {
+            display: block;
+        }
+        
+        #prev {
+            left: 20px;
+        }
+        
+        #next {
+            right: 20px;
+        }
+	</style>
+	<script>
+		 window.onload = function() {
+            var list = document.getElementById('list');
+            var prev = document.getElementById('prev');
+            var next = document.getElementById('next');
+            
+
+            //左右控制键操作
+            /*方法animate  实现模块化编程   （  形参（偏移量） ）
+              根据左偏移量实现图片的显示
+           */
+            function animate(offset) {
+                //获取的是style.left，是相对左边获取距离，所以第一张图后style.left都为负值，
+                //且style.left获取的是字符串，需要用parseInt()取整转化为数字。
+                var newLeft = parseInt(list.style.left) + offset;
+                list.style.left = newLeft + 'px';
+                console.log(list.style.left);
+                if(newLeft<-3000){
+			      list.style.left = -600 + 'px';  //显示的是第一张图
+				}
+				if(newLeft>-600){   /* -4200 < -3600   <  -3000 <        <-600  <  0*/
+				      list.style.left = -3000 + 'px';  //显示第五张图
+				}
+            }
+            /*  当点击向前向后箭头时,left 发生变化  
+                操控dom元素，实现方法调用
+            */
+            prev.onclick = function() {             
+                animate(600);
+            }
+            next.onclick = function() {  
+                animate(-600);
+            }
+            var timer;
+			function play() {
+			    timer = setInterval(function () {
+			        prev.onclick()
+			    }, 1500)
+			}
+			play();
+			// 停止计时器
+			var container = document.getElementById('container');
+            function stop() {
+                clearInterval(timer);
+            }
+            container.onmouseover = stop;
+            container.onmouseout = play;
+
+
+
+
+            //小圆点功能显示
+            var buttons = document.getElementById('buttons').getElementsByTagName('span');
+            var index = 1;
+
+            function buttonsShow() {
+                //这里需要清除之前的样式   ----清除样式
+                for (var i = 0; i < buttons.length; i++) {
+                    if (buttons[i].className == 'on') {
+                        buttons[i].className = '';
+                    }
+                }
+                //数组从0开始，故index需要-1 ，其中 index 为 1
+                buttons[index - 1].className = 'on';     
+                /*
+                这句话的作用是让buttons[0]（第一个圆）的背景色呈现橙色                 
+                buttons[0].className=='on';
+                */
+            }
+             //点击向前按钮
+            prev.onclick = function() {
+                index -= 1;
+                if (index < 1) {
+                    index = 5;
+                }
+                buttonsShow();
+                animate(600);
+            }
+            ////点击向后按钮
+            next.onclick = function() {
+                //由于上边定时器的作用，index会一直递增下去，我们只有5个小圆点，所以需要做出判断
+                index += 1;
+                if (index > 5) {
+                    index = 1;
+                }
+                buttonsShow();
+                animate(-600);
+            }
+            // 通过鼠标任意点击其中一个小圆点，切换到相应的图片，原理同样，我们还是需要通过偏移量去找到对应的图片。
+
+            //这种方法会形成闭包
+            for (var i = 0; i < buttons.length; i++) {
+            buttons[i].onclick = function () {
+                // 在浏览器的控制台打印一下，看看结果
+                console.log(i);
+
+                /* 偏移量获取：这里获得鼠标移动到小圆点的位置，用this把index绑定到对象buttons[i]上，去谷歌this的用法  */
+                // 由于这里的index是自定义属性，需要用到getAttribute()这个DOM2级方法，去获取自定义index的属性
+                var clickIndex = parseInt(this.getAttribute('index'));
+                var offset = 600 * (index - clickIndex);
+                animate(offset); //存放鼠标点击后的位置，用于小圆点的正常显示 
+                index = clickIndex;
+                buttonsShow();
+            }
+        }
+
+
+        //通过鼠标任意点击其中一个小圆点，切换到相应的图片，原理同样，我们还是需要通过偏移量去找到对应的图片。
+        for (var i = 0; i < buttons.length; i++) {
+                // 这里使用的是立即执行函数，
+                (function(i) {
+                    buttons[i].onclick = function() {
+                        var clickIndex = parseInt(this.getAttribute('index'));
+                        console.log(clickIndex);
+                        var offset = 600 * (index - clickIndex); 
+                        animate(offset);
+                        index = clickIndex;
+                        buttonsShow();
+                    }
+                })(i)
+            }
+
+            function play() {
+                //将轮播图换成向右切换图片
+                timer = setInterval(function () {
+                    next.onclick();
+                }, 2000)
+            }
+
+        }
+	</script>
+</head>
+<body>
+	<div id="container">   <!--    结构：container > list > img    -->
+        <div id="list" style="left: -600px;"> 
+                 <!-- style="left: -600px;" 是为了将第一张图即辅助的img/5.jpg隐藏起来
+                      -600 是相对于container定位
+                      -600  img/5.jpg隐藏起来，list 向左移动600px;
+                      -1200   list 向左移动1200px;
+                      -1800   list 向左移动1800px;
+                      只是定位的位置发生变化，因为px的不同，产生动态的偏移，
+                             即所谓的“动画”
+                  -->
+                 <!-- 
+                 当你从最后一张图切换回第一张图时，有很大空白，利用两张辅助图来填补这个空白。                 
+                 这里补充下无缝滚动，直接看代码，复制最后一张图片放置第一张图片前，同时复制第一张图片放置最后一张图片的后面。并且，将第一张图片辅助图（实际上是实际显示的第5张图片隐藏起来，故设置style="left: -600px;"） 
+                 -->
+            <img src="img/5.jpg" alt="1" />
+            <img src="img/1.jpg" alt="1" />
+            <img src="img/2.jpg" alt="2" />
+            <img src="img/3.jpg" alt="3" />
+            <img src="img/4.jpg" alt="4" />
+            <img src="img/5.jpg" alt="5" />
+            <img src="img/1.jpg" alt="5" />
+        </div>
+        <div id="buttons">
+             <span index="1" class="on"></span>  <!-- index自定义属性 -->
+             <span index="2"></span>
+             <span index="3"></span>
+             <span index="4"></span>
+             <span index="5"></span>
+        </div>
+        <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+        <a href="javascript:;" id="next" class="arrow">&gt;</a>
+        <!-- 使用<a>标签href属性通常是保存超链接，用来控制页面转向。
+              javascript:;表示这是一个空连接。点击之后没任何反应。
+              <a> 标签的 href 属性用于指定超链接目标的 URL，href 属性的值可以是任何有效文档的相对或绝对 URL，包括片段标识符和 JavaScript 代码段。
+              这里的href="javascript:;"，其中javascript:是伪协议，它可以让我们通过一个链接来调用javascript函数.而采用这个方式 javascript:;可以实现A标签的点击事件运行时，如果页面内容很多，有滚动条时，页面不会乱跳，用户体验更好。
+              有一种说法是：href="javascript:;"会去解析<script></script>里面的代码，跟当前<a>标签有关的就会执行,.没关的就跳过。
+              javascript: 是一个伪协议，其他的伪协议还有 mail:  tel:  file:  等等。
+              javascript:是表示在触发<a>默认动作时，执行一段JavaScript代码，而 javascript:; 表示什么都不执行，这样点击<a>时就没有任何反应。
+         -->
+
+    </div>
+</body>
+</html>

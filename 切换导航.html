@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>HTML+jQuery+css 选项卡切换更能</title>
+	<meta name="keywords" content="HTML+jQuery+css 选项卡切换更能<" />
+	<meta name="description" content="HTML+jQuery+css 选项卡切换更能<" />
+    <style type="text/css">
+    body,ul,li{
+        margin: 0;padding: 0;
+        font: 12px normal "宋体", Arial, Helvetica, sans-serif;
+        list-style: none;
+    }
+    a{
+        text-decoration: none;color: #000;
+        font-size: 14px;
+    }
+
+    #tabbox{ 
+        width:1000px; overflow:hidden;
+        margin:0 auto;
+    }
+    
+    .tab_conbox{
+        border: 1px solid #999;border-top: none;
+    }
+        
+    .tab_con{
+        display:none;
+        /* display:block; */
+    }
+
+    .tabs{
+        height: 32px;border-bottom:1px solid #999;border-left: 1px solid #999;
+        width: 100%;
+    }
+    
+    .tabs li{
+        height:31px;line-height:31px;
+        float:left;border:1px solid #999;
+        border-left:none;
+        margin-bottom: -1px;background: #e0e0e0;
+        overflow: hidden;position: relative;
+    }
+    
+    .tabs li a {
+        display: block;padding: 0 20px;
+        border: 1px solid #fff;outline: none;
+    }
+    
+    .tabs li a:hover {
+        background: #ccc;
+    }    
+    
+    .tabs .thistab,.tabs .thistab a:hover{
+        background: #fff;border-bottom: 1px solid #fff;
+    }
+
+    .tab_con {
+        padding:12px;font-size: 14px; line-height:175%;
+    }
+</style>
+<script src="http://lib.sinaapp.com/js/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        jQuery.jqtab = function(tabtit,tabcon) { //这里tabtit对应#tabs，
+        	                                      // tabcon对应.tab_con
+            $(tabcon).hide(); //将下面的4个内容全部隐藏
+            $(tabtit+" li:first").addClass("thistab").show();
+            //为第一个tab添加样式及显示
+            $(tabcon+":first").show(); 
+            //显示第一个内容部分
+            $(tabtit+" li").click(function() {
+                $(tabtit+" li").removeClass("thistab");
+                //选项卡移除点击样式
+                $(this).addClass("thistab");
+                //为当前点击的选项卡添加样式
+                $(tabcon).hide();
+
+                var activeTab = $(this).find("a").attr("tab");
+                console.log(activeTab);
+                //读取tab属性,当前点击的TAB
+                $("#"+activeTab).fadeIn();
+                return false;
+            });
+            
+        };
+        /*调用方法如下：*/
+        $.jqtab("#tabs",".tab_con");
+        
+    });
+</script>
+
+
+</head>
+<body>
+	<div id="tabbox">
+        <ul class="tabs" id="tabs">
+           <li><a tab="tab1">选项卡1</a></li>
+           <li><a tab="tab2">选项卡2</a></li>
+           <li><a tab="tab3">选项卡3</a></li>
+           <li><a tab="tab4">选项卡4</a></li>
+        </ul>
+        
+        <ul class="tab_conbox">
+            <li id="tab1" class="tab_con">
+               <p>总要说点什么.又不知道说什么！ Hello world ！</P>
+               <p>在辽宁抚顺新宾有一个帅哥，很帅很帅很帅很帅很帅很帅很帅很帅很帅很帅...... 的帅哥，他叫SunZhenYang  &nbsp;\(^o^)/~</p>
+            </li>
+                
+            <li id="tab2" class="tab_con">
+               <p>总要说点什么.又不知道说什么！ Hello world ！</P>
+               <p>在辽宁抚顺新宾有一个帅哥，很帅很帅很帅很帅很帅很帅很帅很帅很帅很帅...... 的帅哥，他叫SunZhenYang  &nbsp;\(^o^)/~</p>
+            </li>
+        
+            <li id="tab3" class="tab_con">
+               <p>总要说点什么.又不知道说什么！ Hello world ！</P>
+               <p>在辽宁抚顺新宾有一个帅哥，很帅很帅很帅很帅很帅很帅很帅很帅很帅很帅...... 的帅哥，他叫SunZhenYang  &nbsp;\(^o^)/~</p>
+            </li>
+        
+            <li id="tab4" class="tab_con">
+               <p>总要说点什么.又不知道说什么！ Hello world ！</P>
+               <p>在辽宁抚顺新宾有一个帅哥，很帅很帅很帅很帅很帅很帅很帅很帅很帅很帅...... 的帅哥，他叫SunZhenYang  &nbsp;\(^o^)/~</p>。
+            </li>
+        </ul>      
+    </div>
+</body>
+</html>

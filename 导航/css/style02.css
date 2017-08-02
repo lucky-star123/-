@@ -1,0 +1,79 @@
+*{margin:0;padding:0;}
+body{font-size:62.5%;}
+ul{list-style:none;font-size:1.4em;}
+header{
+	height:39px;
+	border-bottom:1px #ccc;
+}
+#topNav{
+	width:350px;
+    height:40px;
+    position:absolute;
+    top:0;
+    right:100px;
+    line-height:40px;
+    color:#666;
+}
+#topNav>li{
+	float:left;
+	margin-left:20px;
+	cursor:pointer;
+	text-decoration:underline;
+}
+/*以下是右边部分*/
+#rightNav{
+	width:85px;
+	border-left:1px solid #ccc;
+	position:absolute;
+	top:0;
+	right:0;
+	height:100%;
+	background:#f9f9f9;
+}
+#rightNav>li{
+	text-align:center;
+}
+#rightNav>li:first-child{
+	height:39px;
+	line-height:40px;
+}
+#rightNav a{
+	display:block;
+	width: 66px;
+	height: 67px;
+	border-top:1px solid #ccc;
+	margin:0 auto;
+	padding-top:10px;
+	color:#666;
+	font-size:12px;
+	line-height:30px;
+}
+.icon{
+	display:block;
+	width: 36px;
+	height: 36px;
+	background:url('../rightlogo.png');
+	margin:0 auto;
+}
+.zhidao{
+	background-position:-36px top;
+}
+.yinyue{
+	width: 40px;
+	background-position:-72px top;
+}
+.tupian{
+	width: 30px;
+	background-position: -114px top;
+}
+.wenku{
+	width: 30px;
+	background-position:-150px top;
+}
+.fengyun{
+	background-position:-184px top;
+}
+.tuiguang{
+	width: 32px;
+	background-position:-222px top;
+}
